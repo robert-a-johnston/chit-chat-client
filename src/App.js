@@ -10,7 +10,7 @@ import SignUp from './components/auth/SignUp'
 import SignIn from './components/auth/SignIn'
 import SignOut from './components/auth/SignOut'
 import ChangePassword from './components/auth/ChangePassword'
-import ChatIndex from './components/chat/ChatIndex'
+import JoinChat from './components/chat/JoinChat'
 
 class App extends Component {
   constructor (props) {
@@ -91,7 +91,7 @@ class App extends Component {
             user={user}
             path='/'
             render={() => (
-              <ChatIndex msgAlert={this.msgAlert} user={user} />
+              <JoinChat msgAlert={this.msgAlert} user={user} />
             )}
           />
         </main>
