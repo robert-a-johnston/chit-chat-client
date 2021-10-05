@@ -1,8 +1,8 @@
 /* eslint-disable no-tabs */
 import React, { Component, Fragment } from 'react'
 import { Route } from 'react-router-dom'
+import io from 'socket.io-client'
 import { v4 as uuid } from 'uuid'
-
 import AuthenticatedRoute from './components/AuthenticatedRoute/AuthenticatedRoute'
 import AutoDismissAlert from './components/AutoDismissAlert/AutoDismissAlert'
 import Header from './components/Header/Header'
@@ -20,6 +20,8 @@ class App extends Component {
       msgAlerts: []
     }
   }
+
+  socket = io.connect('http://localhost:4741')
 
   setUser = (user) => this.setState({ user })
 
@@ -41,7 +43,8 @@ class App extends Component {
   }
 
   render () {
-    const { msgAlerts, user } = this.state
+    const { msgAlerts, user, props } = this.state
+    console.log('props', props)
 
     return (
       <Fragment>
