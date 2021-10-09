@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import './JoinChat.css'
 
-export default function JoinChat (props) {
+function JoinChat (props) {
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
 
   const joinRoom = (socket, name, room) => {
-    console.log('socket, name, room ', socket, name, room)
     if (name !== '' && room !== '') {
-      socket.emit('join_room', room)
+      const joinRoomData = {
+        name: name,
+        room: room
+      }
+      socket.emit('join_room', joinRoomData)
     }
   }
   return (
@@ -54,3 +57,5 @@ export default function JoinChat (props) {
     </div>
   )
 }
+
+export default withRouter(JoinChat)

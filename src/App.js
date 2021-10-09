@@ -1,7 +1,6 @@
 /* eslint-disable no-tabs */
 import React, { Component, Fragment } from 'react'
 import { Route } from 'react-router-dom'
-import io from 'socket.io-client'
 import { v4 as uuid } from 'uuid'
 import AuthenticatedRoute from './components/AuthenticatedRoute/AuthenticatedRoute'
 import AutoDismissAlert from './components/AutoDismissAlert/AutoDismissAlert'
@@ -13,8 +12,12 @@ import ChangePassword from './components/auth/ChangePassword'
 import JoinChat from './components/chat/JoinChat'
 import ChatRoom from './components/chat/ChatRoom'
 
-const socket = io.connect('http://localhost:4741')
+const io = require('socket.io-client')
 
+const socket = io('ws://localhost:4741')
+socket.on('message', (data) => {
+  console.log('data from server', data)
+})
 class App extends Component {
   constructor (props) {
     super(props)
