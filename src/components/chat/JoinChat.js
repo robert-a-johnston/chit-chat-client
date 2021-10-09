@@ -1,10 +1,20 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import './JoinChat.css'
 
-export default function JoinChat () {
+function JoinChat (props) {
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
+
+  const joinRoom = (socket, name, room) => {
+    if (name !== '' && room !== '') {
+      const joinRoomData = {
+        name: name,
+        room: room
+      }
+      socket.emit('join_room', joinRoomData)
+    }
+  }
   return (
     <div>
       <div className="join-container">
@@ -14,7 +24,7 @@ export default function JoinChat () {
         <main className="join-main">
           <form>
             <div className="form-control">
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">Chat Name</label>
               <input
                 type="text"
                 name="username"
@@ -35,8 +45,11 @@ export default function JoinChat () {
                 onChange={(e) => setRoom(e.target.value)}
               />
             </div>
-            <Link onClick={e => (!name || !room) ? e.preventDefault() : null} to={`/chat?name=${name}&room=${room}`}>
-              <button type="submit" className="btn">Join Chat</button>
+            <Link onClick={joinRoom(props.socket, name, room)} to={`/chat/${name}/${room}`}>
+              <button
+                type="submit"
+                className="btn"
+              >Join Chat</button>
             </Link>
           </form>
         </main>
@@ -44,3 +57,5 @@ export default function JoinChat () {
     </div>
   )
 }
+
+export default withRouter(JoinChat)

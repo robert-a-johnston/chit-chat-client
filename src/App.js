@@ -1,7 +1,6 @@
 /* eslint-disable no-tabs */
 import React, { Component, Fragment } from 'react'
 import { Route } from 'react-router-dom'
-import io from 'socket.io-client'
 import { v4 as uuid } from 'uuid'
 import AuthenticatedRoute from './components/AuthenticatedRoute/AuthenticatedRoute'
 import AutoDismissAlert from './components/AutoDismissAlert/AutoDismissAlert'
@@ -11,7 +10,14 @@ import SignIn from './components/auth/SignIn'
 import SignOut from './components/auth/SignOut'
 import ChangePassword from './components/auth/ChangePassword'
 import JoinChat from './components/chat/JoinChat'
+import ChatRoom from './components/chat/ChatRoom'
 
+const io = require('socket.io-client')
+
+const socket = io('ws://localhost:4741')
+socket.on('message', (data) => {
+  console.log('data from server', data)
+})
 class App extends Component {
   constructor (props) {
     super(props)
@@ -20,8 +26,6 @@ class App extends Component {
       msgAlerts: []
     }
   }
-
-  socket = io.connect('http://localhost:4741')
 
   setUser = (user) => this.setState({ user })
 
@@ -43,8 +47,7 @@ class App extends Component {
   }
 
   render () {
-    const { msgAlerts, user, props } = this.state
-    console.log('props', props)
+    const { msgAlerts, user } = this.state
 
     return (
       <Fragment>
@@ -92,9 +95,16 @@ class App extends Component {
           />
           <AuthenticatedRoute
             user={user}
-            path='/'
+            exact path='/'
             render={() => (
-              <JoinChat msgAlert={this.msgAlert} user={user} />
+              <JoinChat socket={socket} msgAlert={this.msgAlert} user={user} />
+            )}
+          />
+          <AuthenticatedRoute
+            user={user}
+            path='/chat/:name/:room/'
+            render={() => (
+              <ChatRoom socket={socket} msgAlert={this.msgAlert} user={user}/>
             )}
           />
         </main>
