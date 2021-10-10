@@ -16,6 +16,9 @@ export default function ChatRoom ({ msgAlert, user }) {
     socket.current.on('getUsers', users => {
       console.log('users', users)
     })
+    socket.current.on('receive_message', (messageData) => {
+      console.log('message data', messageData)
+    })
   }, [user])
 
   // Sends message with socket
@@ -31,7 +34,7 @@ export default function ChatRoom ({ msgAlert, user }) {
           ':' +
           new Date(Date.now()).getMinutes()
       }
-      await socket.emit('message', messageData)
+      await socket.current.emit('message', messageData)
       setCurrentMessage('')
     }
   }
