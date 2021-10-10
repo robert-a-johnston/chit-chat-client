@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import { io } from 'socket.io-client'
 
-export default function ChatRoom ({ socket, msgAlert, user }) {
+export default function ChatRoom ({ msgAlert, user }) {
   // set state for message
   const [currentMessage, setCurrentMessage] = useState('')
 
+  // sets socket var
+  const socket = useRef(io('ws://localhost:4741'))
   // allows to use room and name from url
   const { room, name } = useParams()
 
-  // on page load gets message from server
   useEffect(() => {
-    console.log('in useEffect')
-    socket.on('message', (data) => {
-      console.log('data from server', data)
+    socket.current.emit('addUser', user._id)
+    socket.current.on('getUsers', users => {
+      console.log('users', users)
     })
-  }, [socket])
+    socket.current.on('receive_message', (messageData) => {
+      console.log('message data', messageData)
+    })
+  }, [user])
 
   // Sends message with socket
   const sendMessage = async () => {
@@ -29,7 +34,7 @@ export default function ChatRoom ({ socket, msgAlert, user }) {
           ':' +
           new Date(Date.now()).getMinutes()
       }
-      await socket.emit('message', messageData)
+      await socket.current.emit('message', messageData)
       setCurrentMessage('')
     }
   }

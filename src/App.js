@@ -11,13 +11,10 @@ import SignOut from './components/auth/SignOut'
 import ChangePassword from './components/auth/ChangePassword'
 import JoinChat from './components/chat/JoinChat'
 import ChatRoom from './components/chat/ChatRoom'
-
-const io = require('socket.io-client')
+import { io } from 'socket.io-client'
 
 const socket = io('ws://localhost:4741')
-socket.on('message', (data) => {
-  console.log('data from server', data)
-})
+
 class App extends Component {
   constructor (props) {
     super(props)
