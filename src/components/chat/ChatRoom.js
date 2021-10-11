@@ -5,6 +5,7 @@ import { io } from 'socket.io-client'
 export default function ChatRoom ({ msgAlert, user }) {
   // set state for message
   const [currentMessage, setCurrentMessage] = useState('')
+  const [messageList, setMessageList] = useState([])
 
   // sets socket var
   const socket = useRef(io('ws://localhost:4741'))
@@ -16,15 +17,18 @@ export default function ChatRoom ({ msgAlert, user }) {
     socket.current.on('getUsers', users => {
       console.log('users', users)
     })
-    socket.current.on('receive_message', (messageData) => {
-      console.log('message data', messageData)
-    })
   }, [user])
+
+  useEffect(() => {
+    socket.current.on('receive_message', (data) => {
+      console.log('data from server', data)
+      console.log('message list', messageList)
+    })
+  }, [socket])
 
   // Sends message with socket
   const sendMessage = async () => {
     if (currentMessage !== '') {
-      console.log('username', name)
       const messageData = {
         room: room,
         userName: name,
@@ -35,6 +39,8 @@ export default function ChatRoom ({ msgAlert, user }) {
           new Date(Date.now()).getMinutes()
       }
       await socket.current.emit('message', messageData)
+      setMessageList((list) => [...list, messageData])
+      console.log('message list', messageData)
       setCurrentMessage('')
     }
   }
@@ -53,7 +59,8 @@ export default function ChatRoom ({ msgAlert, user }) {
             <h3><i className="fas fa-users"></i> Users</h3>
             <ul id="users">user1</ul>
           </div>
-          <div className="chat-messages"></div>
+          <div className="chat-messages">messages
+          </div>
         </main>
         <div className="chat-form-container">
           <form id="chat-form" onClick={sendMessage}>

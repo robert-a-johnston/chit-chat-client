@@ -11,9 +11,6 @@ import SignOut from './components/auth/SignOut'
 import ChangePassword from './components/auth/ChangePassword'
 import JoinChat from './components/chat/JoinChat'
 import ChatRoom from './components/chat/ChatRoom'
-import { io } from 'socket.io-client'
-
-const socket = io('ws://localhost:4741')
 
 class App extends Component {
   constructor (props) {
@@ -101,7 +98,7 @@ class App extends Component {
             user={user}
             path='/chat/:name/:room/'
             render={() => (
-              <ChatRoom socket={socket} msgAlert={this.msgAlert} user={user}/>
+              <ChatRoom msgAlert={this.msgAlert} user={user}/>
             )}
           />
         </main>
