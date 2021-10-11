@@ -94,7 +94,7 @@ class App extends Component {
             user={user}
             exact path='/'
             render={() => (
-              <JoinChat socket={socket} msgAlert={this.msgAlert} user={user} />
+              <JoinChat msgAlert={this.msgAlert} user={user} />
             )}
           />
           <AuthenticatedRoute
