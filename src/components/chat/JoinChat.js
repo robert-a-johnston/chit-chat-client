@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import './JoinChat.css'
-// import { io } from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 function JoinChat (props) {
   // set state for user name selected and room selected
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
-  // const socket = useRef(io('ws://localhost:4741'))
+  const socket = useRef(io('ws://localhost:4741'))
 
   // // on page load gets message from server
   // useEffect(() => {
@@ -24,7 +24,7 @@ function JoinChat (props) {
         name: name,
         room: room
       }
-      socket.emit('join_room', joinRoomData)
+      socket.current.emit('join_room', joinRoomData)
     }
   }
   return (
@@ -57,7 +57,7 @@ function JoinChat (props) {
                 onChange={(e) => setRoom(e.target.value)}
               />
             </div>
-            <Link onClick={joinRoom(props.socket, name, room)} to={`/chat/${name}/${room}`}>
+            <Link onClick={joinRoom(socket, name, room)} to={`/chat/${name}/${room}`}>
               <button
                 type="submit"
                 className="btn"
