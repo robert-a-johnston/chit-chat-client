@@ -9,14 +9,6 @@ function JoinChat (props) {
   const [room, setRoom] = useState('')
   const socket = useRef(io('ws://localhost:4741'))
 
-  // // on page load gets message from server
-  // useEffect(() => {
-  //   console.log('in useEffect', socket)
-  //   socket.current.on('message', (data) => {
-  //     console.log('data from server', data)
-  //   })
-  // }, [socket])
-
   // sends user name and room to server
   const joinRoom = (socket, name, room) => {
     if (name !== '' && room !== '') {
