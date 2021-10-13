@@ -6,6 +6,7 @@ export default function ChatRoom ({ msgAlert, user }) {
   // set state for message
   const [currentMessage, setCurrentMessage] = useState('')
   const [messageList, setMessageList] = useState([])
+  const [chatNames, setChatNames] = useState([])
 
   // sets socket var
   const socket = useRef(io('ws://localhost:4741'))
@@ -15,7 +16,8 @@ export default function ChatRoom ({ msgAlert, user }) {
   useEffect(() => {
     socket.current.emit('addUser', user._id)
     socket.current.on('getUsers', users => {
-      console.log('users', users)
+      setChatNames([users])
+      console.log('users with id', users, chatNames)
     })
   }, [user])
 
@@ -38,12 +40,17 @@ export default function ChatRoom ({ msgAlert, user }) {
           ':' +
           new Date(Date.now()).getMinutes()
       }
-      await socket.current.emit('message', messageData)
+      socket.current.emit('message', messageData)
       setMessageList((list) => [...list, messageData])
       console.log('message list', messageData)
       setCurrentMessage('')
     }
   }
+
+  // lists users
+  const chatNamesList = chatNames.map(user => (
+    <li key={user.socketID}>{user.userId}</li>
+  ))
 
   return (
     <div>
@@ -57,7 +64,7 @@ export default function ChatRoom ({ msgAlert, user }) {
             <h3><i className="fas fa-comments"></i> Room Name:</h3>
             <h2 id="room-name">{room}</h2>
             <h3><i className="fas fa-users"></i> Users</h3>
-            <ul id="users">user1</ul>
+            <ul id="users">user1{chatNamesList}</ul>
           </div>
           <div className="chat-messages">messages
           </div>
