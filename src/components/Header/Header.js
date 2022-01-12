@@ -1,7 +1,10 @@
 import React, { Fragment } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
+import Container from 'react-bootstrap/Container'
 import { Link, NavLink } from 'react-router-dom'
+import { RiHomeSmile2Line } from 'react-icons/ri'
+import './Header.css'
 
 const authenticatedOptions = (
   <Fragment>
@@ -19,25 +22,27 @@ const unauthenticatedOptions = (
 
 const alwaysOptions = (
   <Fragment>
-    <NavLink exact to='/' className='nav-link'>Home</NavLink>
+    <NavLink exact to='/' className='nav-link'><RiHomeSmile2Line className='home'/></NavLink>
   </Fragment>
 )
 
 const Header = ({ user }) => (
-  <Navbar bg='primary' variant='dark' expand='md'>
-    <Navbar.Brand>
-      <Link to='/' style={{ color: '#FFF', textDecoration: 'none' }}>react-auth-template</Link>
-    </Navbar.Brand>
-    <Navbar.Toggle aria-controls='basic-navbar-nav' />
-    <Navbar.Collapse id='basic-navbar-nav'>
-      <Nav className='ml-auto'>
-        {user && (
-          <span className='navbar-text mr-2'>Welcome, {user.email}</span>
-        )}
-        {alwaysOptions}
-        {user ? authenticatedOptions : unauthenticatedOptions}
-      </Nav>
-    </Navbar.Collapse>
+  <Navbar className='nav-bar' variant='dark' expand='md'>
+    <Container>
+      <Navbar.Brand>
+        <Link to='/'>Vid Chat</Link>
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls='basic-navbar-nav' />
+      <Navbar.Collapse id='basic-navbar-nav'>
+        <Nav className='ml-auto'>
+          {alwaysOptions}
+          {user ? authenticatedOptions : unauthenticatedOptions}
+        </Nav>
+      </Navbar.Collapse>
+    </Container>
+    <p>{user && (
+      <span id='welcome' className='navbar-text mr-2'>Welcome, {user.email}</span>
+    )}</p>
   </Navbar>
 )
 
