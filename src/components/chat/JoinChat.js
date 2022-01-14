@@ -7,6 +7,7 @@ function JoinChat (props) {
   // set state for user name selected and room selected
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
+
   const socket = useRef(io('ws://localhost:4741'))
 
   // sends user name and room to server
