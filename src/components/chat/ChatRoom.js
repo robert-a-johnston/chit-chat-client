@@ -10,23 +10,9 @@ export default function ChatRoom ({ msgAlert, user }) {
 
   // sets socket var
   const socket = useRef(io('ws://localhost:4741'))
+
   // allows to use room and name from url
   const { room, name } = useParams()
-
-  useEffect(() => {
-    socket.current.emit('addUser', user._id)
-    socket.current.on('getUsers', users => {
-      setChatNames([users])
-      console.log('users with id', users, chatNames)
-    })
-  }, [user])
-
-  useEffect(() => {
-    socket.current.on('receive_message', (data) => {
-      console.log('data from server', data)
-      console.log('message list', messageList)
-    })
-  }, [socket])
 
   // Sends message with socket
   const sendMessage = async () => {
@@ -42,10 +28,27 @@ export default function ChatRoom ({ msgAlert, user }) {
       }
       socket.current.emit('message', messageData)
       setMessageList((list) => [...list, messageData])
-      console.log('message list', messageData)
+      console.log('message list sent', messageData)
       setCurrentMessage('')
     }
   }
+
+  useEffect(() => {
+    socket.current.on('receive_message', (data) => {
+      console.log('in mess')
+      setMessageList((list) => [...list, data])
+      console.log('data from server', data)
+      console.log('message list received', messageList)
+    })
+  }, [socket])
+
+  useEffect(() => {
+    socket.current.emit('addUser', user._id)
+    socket.current.on('getUsers', users => {
+      setChatNames(users)
+      console.log('users with id', users)
+    })
+  }, [socket])
 
   // lists users
   const chatNamesList = chatNames.map(user => (
